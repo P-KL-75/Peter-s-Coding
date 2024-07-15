@@ -18,7 +18,6 @@
 		<link href="bootstrap\css\bootstrap.min.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="bootstrap\js\bootstrap.min.js"></script>
-		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
 		<script src="js/jquery.min.js"></script>
 		<script src="js/skel.min.js"></script>
 		<script src="js/skel-layers.min.js"></script>
@@ -33,8 +32,7 @@
 <body>
 
 
-				<?php
-					require 'menu.php';
+		
 
 					$sql="SELECT * FROM fproduct WHERE pid = '$pid'";
 					$result = mysqli_query($conn, $sql);

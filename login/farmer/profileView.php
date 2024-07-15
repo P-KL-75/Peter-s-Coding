@@ -1,11 +1,43 @@
 <?php
-    session_start();
+session_start();
 
-	if(!isset($_SESSION['logged_in']) OR $_SESSION['logged_in'] != 1)
-	{
-		$_SESSION['message'] = "You have to Login to view this page!";
-		header("Location: Login/error.php");
-	}
+require_once 'db_connect.php'; // Include database connection
+
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Establish a database connection
+$conn = new mysqli($hostname, $username, $password, $database);
+
+// Check if the connection was successful
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Retrieve farmer information from the database
+$username = $_SESSION['username'];
+$query = "SELECT * FROM farmer WHERE fusername = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Check if any result is returned
+if ($result->num_rows == 1) {
+    // Fetch farmer details
+    $farmer = $result->fetch_assoc();
+} else {
+    // Redirect to login page if no farmer found
+    header("Location: login.php");
+    exit();
+}
+
+// Close statement and connection
+$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE HTML>
@@ -35,21 +67,19 @@
 
 
     <body>
-
-        <?php
-            require 'menu.php';
-        ?>
+    </header>
 
         <section id="one" class="wrapper style1 align">
             <div class="inner">
                 <div class="box">
                 <header>
+                    <nav>
                     <center>
                     <span><img src="<?php echo 'images/profileImages/'.$_SESSION['picName'].'?'.mt_rand(); ?>" class="image-circle" class="img-responsive" height="200%"></span>
-                    <br>
-                    <h2><?php echo $_SESSION['Name'];?></h2>
+
+                    <h1>Welcome, <?php echo $farmer['fname']; ?>!</h1>
                     <h4 style="color: black;"><?php echo $_SESSION['Username'];?></h4>
-                    <br>
+                </nav>
                 </center>
                 </header>
                     <div class="row">

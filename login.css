@@ -1,5 +1,157 @@
-input[type=text], input[type=password] 
-{
+#banner {
+    background-image: url('login/farmer/images/farmers.png');
+    background-size: cover;
+    background-position: center;
+    color: blueviolet;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.navbar {
+    background-color: green;
+    overflow: hidden;
+}
+
+.navbar a {
+    float: right;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 20px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.navbar a:hover {
+    background-color: blue;
+    color: black;
+}
+
+.navbar img {
+    float: left;
+    margin-top: 8px;
+    margin-right: 50px;
+    width: 50px;
+    height: auto;
+}
+
+@keyframes animateNavbar {
+    0% {
+        margin-top: -50px;
+    }
+    100% {
+        margin-top: 0;
+    }
+}
+
+#contactForm {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f9f9f9;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    max-width: 80%;
+    width: 500px;
+}
+
+#contactForm h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#contactForm label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#contactForm input[type="text"],
+#contactForm input[type="tel"],
+#contactForm input[type="email"],
+#contactForm textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+#contactForm textarea {
+    height: 100px;
+}
+
+#contactForm button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+}
+
+#contactForm button:hover {
+    background-color: #45a049;
+}
+
+body {
+    background-color: #08c86b;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.wrapper {
+    padding: 2em 0;
+}
+
+.align-center {
+    text-align: center;
+}
+
+#banner {
+    background-color: whitesmoke;
+    padding: 4em 0;
+}
+
+#banner h2 {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+}
+
+#banner p {
+    font-size: 1.2em;
+    color: #777;
+    margin-bottom: 2em;
+}
+
+.section {
+    padding: 50px 0;
+}
+
+.icon {
+    font-size: 48px;
+    color: #4CAF50;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    padding: 50px 0;
+    text-align: center;
+}
+
+input[type=text], input[type=password] {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -9,7 +161,6 @@ input[type=text], input[type=password]
     position: relative;
 }
 
-/* Set a style for all buttons */
 button {
     background-color: #4CAF50;
     color: white;
@@ -25,64 +176,38 @@ button:hover {
     opacity: 0.8;
 }
 
-/* Extra styles for the cancel button */
 .cancelbtn {
     width: auto;
     padding: 10px 18px;
     background-color: #f44336;
 }
 
-/* Center the image and position the close button */
-.imgcontainer {
-    text-align: center;
-    margin: 24px 0 12px 0;
-    position: relative;
-}
-
-img.avatar {
-    width: 40%;
-    border-radius: 50%;
-}
-
-.container {
-    padding: 16px;
-}
-
-span.psw {
-    float: right;
-    padding-top: 16px;
-}
-
-/* The Modal (background) */
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
     padding-top: 60px;
 }
 
-/* Modal Content/Box */
 .modal-content {
-    background-color: #fefefe;
-    margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+    background-color: #41d913;
+    margin: 5% auto 15% auto;
     border: 1px solid #888;
-    width: 50%; /* Could be more or less, depending on screen size */
+    width: 50%;
 }
 
-/* The Close Button (x) */
 .close {
     position: absolute;
-    right: 25px;
-    top: 0;
+    top: 148px;
+    right: 445px;
     color: #000;
-    font-size: 35px;
+    font-size: 25px;
     font-weight: bold;
 }
 
@@ -92,29 +217,63 @@ span.psw {
     cursor: pointer;
 }
 
-/* Add Zoom Animation */
 .animate {
     -webkit-animation: animatezoom 0.6s;
-    animation: animatezoom 0.6s
+    animation: animatezoom 0.6s;
 }
 
 @-webkit-keyframes animatezoom {
-    from {-webkit-transform: scale(0)} 
-    to {-webkit-transform: scale(1)}
-}
-    
-@keyframes animatezoom {
-    from {transform: scale(0)} 
-    to {transform: scale(1)}
+    from {
+        -webkit-transform: scale(0);
+    }
+    to {
+        -webkit-transform: scale(1);
+    }
 }
 
-/* Change styles for span and cancel button on extra small screens */
+@keyframes animatezoom {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
 @media screen and (max-width: 300px) {
     span.psw {
-       display: block;
-       float: none;
+        display: block;
+        float: none;
     }
     .cancelbtn {
-       width: 100%;
+        width: 100%;
     }
+}
+
+header {
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-size: 36px;
+    color: #333;
+}
+
+p {
+    font-size: 18px;
+    color: #666;
+}
+
+.button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: auto;
+}
+
+.button:hover {
+    opacity: 0.8;
 }

@@ -1,100 +1,92 @@
 <?php
-	session_start();
+session_start();
 
-	require 'db.php';
+require 'db_connect.php'; // Include database connection
 
-	if(!isset($_SESSION['logged_in']) OR $_SESSION['logged_in'] == 0)
-	{
-		$_SESSION['message'] = "You need to first login to access this page !!!";
-		header("Location: Login/error.php");
-	}
+// Check if the user is logged in and the request method is POST
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) {
+    
+    // Handle comment submission
+    if(isset($_POST['comment']) && $_POST['comment'] != "") {
+        // Fetch blog data
+        $sql = "SELECT * FROM blogdata ORDER BY blogId DESC";
+        $result = mysqli_query($conn, $sql);
 
-	if ($_SERVER["REQUEST_METHOD"] == "POST" AND isset($_SESSION['logged_in']) AND $_SESSION['logged_in'] == 1)
-	{
-		if(isset($_POST['comment']) AND $_POST['comment'] != "")
-		{
-			$sql = "SELECT * FROM blogdata ORDER BY blogId DESC";
-			$result = mysqli_query($conn, $sql);
+        // Iterate through blog posts
+        while($row = $result->fetch_array()) {
+            $check = "submit".$row['blogId'];
+            if(isset($_POST[$check])) {
+                $blogId = $row['blogId'];
+                break;
+            }
+        }
 
-			while($row = $result->fetch_array())
-			{
-				$check = "submit".$row['blogId'];
-				if(isset($_POST[$check]))
-				{
-					$blogId = $row['blogId'];
-					break;
-	 			}
-			}
+        // Sanitize comment data
+        $comment = dataFilter($_POST['comment']);
+        // Check if user is logged in
+        if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == 1) {
+            $commentUser = $_SESSION['Username'];
+            $pic = $_SESSION['picName'];
+        } else {
+            $commentUser = "Anonymous";
+            $pic = "profile0.png";
+        }
 
-			$comment = dataFilter($_POST['comment']);
-			if(isset($_SESSION['logged_in']) AND $_SESSION['logged_in'] == 1)
-			{
-				$commentUser = $_SESSION['Username'];
-				$pic = $_SESSION['picName'];
-			}
-			else {
-				$commentUser = "Anonymous";
-				$pic = "profile0.png";
-			}
-			if(isset($blogId))
-			{
-				$sql = "INSERT INTO blogfeedback (blogId, comment, commentUser, commentPic)
-						VALUES ('$blogId' ,'$comment', '$commentUser', '$pic');";
-				$result = mysqli_query($conn, $sql);
-			}
-		}
+        // Insert comment into database
+        if(isset($blogId)) {
+            $sql = "INSERT INTO blogfeedback (blogId, comment, commentUser, commentPic)
+                    VALUES ('$blogId' ,'$comment', '$commentUser', '$pic')";
+            $result = mysqli_query($conn, $sql);
+        }
+    } else {
+        // Handle like submission
+        $sql = "SELECT * FROM blogdata ORDER BY blogId DESC";
+        $result = mysqli_query($conn, $sql);
 
-		else
-		{
-			$sql = "SELECT * FROM blogdata ORDER BY blogId DESC";
-			$result = mysqli_query($conn, $sql);
+        while($row = $result->fetch_array()) {
+            $check = "like".$row['blogId'];
+            if(isset($_POST[$check])) {
+                $blogId = $row['blogId'];
+                break;
+            }
+        }
+        // Check if user has already liked the post
+        $likeCheck = "isLiked".$blogId;
+        if(!isset($_SESSION[$likeCheck]) || $_SESSION[$likeCheck] == 0) {
+            $id = $_SESSION['id'];
+            $sql = "SELECT * FROM likedata WHERE blogId = '$blogId' AND blogUserId = '$id'";
+            $result = mysqli_query($conn, $sql);
+            $num_rows = mysqli_num_rows($result);
+            // Insert like into database
+            if($num_rows == 0) {
+                $sql = "INSERT INTO likedata (blogId, blogUserId) VALUES('$blogId', '$id')";
+                $result = mysqli_query($conn, $sql);
+                $sql = "UPDATE blogdata SET likes = likes + 1 WHERE blogId = '$blogId'";
+                $result = mysqli_query($conn, $sql);
+                $_SESSION[$likeCheck] = 1;
+            }
+        }
+    }
+}
 
-			while($row = $result->fetch_array())
-			{
-				$check = "like".$row['blogId'];
-				if(isset($_POST[$check]))
-				{
-					$blogId = $row['blogId'];
-					break;
-				}
-			}
-			$likeCheck = "isLiked".$blogId;
-			if(!isset($_SESSION[$likeCheck]) OR $_SESSION[$likeCheck] == 0)
-			{
-				$id = $_SESSION['id'];
-				$sql = "SELECT * FROM likedata WHERE blogId = '$blogId' AND blogUserId = '$id'";
-				$result = mysqli_query($conn, $sql);
-				$num_rows = mysqli_num_rows($result);
-				if($num_rows == 0)
-				{
-					$sql = "INSERT INTO likedata (blogId, blogUserId)
-							VALUES('$blogId', '$id')";
-					$result = mysqli_query($conn, $sql);
-					$sql = "UPDATE blogdata SET likes = likes + 1 WHERE blogId = '$blogId'";
-					$result = mysqli_query($conn, $sql);
-					$_SESSION[$likeCheck] = 1;
-				}
-			}
-		}
-	}
+// Function to sanitize data
+function dataFilter($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
 
-	function dataFilter($data)
-	{
-		$data = trim($data);
-		$data = stripslashes($data);
-		$data = htmlspecialchars($data);
-		return $data;
-	}
+// Fetch blog data
+$sql = "SELECT * FROM blogdata ORDER BY blogId DESC";
+$result = mysqli_query($conn, $sql);
 
-	$sql = "SELECT * FROM blogdata ORDER BY blogId DESC";
-	$result = mysqli_query($conn, $sql);
-
-	function formatDate($date)
-	{
-		return date('g:i a', strtotime($date));
-	}
-
+// Function to format date
+function formatDate($date) {
+    return date('g:i a', strtotime($date));
+}
 ?>
+
 
 <!DOCTYPE HTML>
 

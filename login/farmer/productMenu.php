@@ -1,6 +1,43 @@
 <?php
-	session_start();
-	require 'db.php';
+session_start();
+
+require_once 'db_connect.php'; // Include database connection
+
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Establish a database connection
+$conn = new mysqli($hostname, $username, $password, $database);
+
+// Check if the connection was successful
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Retrieve farmer information from the database
+$username = $_SESSION['username'];
+$query = "SELECT * FROM farmer WHERE fusername = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Check if any result is returned
+if ($result->num_rows == 1) {
+    // Fetch farmer details
+    $farmer = $result->fetch_assoc();
+} else {
+    // Redirect to login page if no farmer found
+    header("Location: login.php");
+    exit();
+}
+
+// Close statement and connection
+$stmt->close();
+$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +50,6 @@
 		<link href="bootstrap\css\bootstrap.min.css" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="bootstrap\js\bootstrap.min.js"></script>
-		<!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="login.css"/>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/skel.min.js"></script>
@@ -24,21 +60,9 @@
 			<link rel="stylesheet" href="css/style.css" />
 			<link rel="stylesheet" href="css/style-xlarge.css" />
 		</noscript>
-		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+	
 	</head>
 	<body class>
-
-		<?php
-			require 'menu.php';
-			function dataFilter($data)
-			{
-				$data = trim($data);
-				$data = stripslashes($data);
-				$data = htmlspecialchars($data);
-				return $data;
-			}
-		?>
-
 		<!-- One -->
 			<section id="main" class="wrapper style1 align-center" >
 				<div class="container">
